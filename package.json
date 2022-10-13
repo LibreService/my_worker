@@ -1,0 +1,28 @@
+{
+  "name": "@libreservice/my-worker",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/LibreService/my_worker",
+  "author": {
+    "name": "Qijia Liu",
+    "email": "liumeo@pku.edu.cn",
+    "url": "https://github.com/eagleoflqj"
+  },
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "lint": "eslint --ext .ts src demo",
+    "lint:fix": "eslint --ext .ts --fix src demo",
+    "check": "tsc --noEmit",
+    "build": "tsc -d"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "eslint": "^8.25.0",
+    "typescript": "^4.8.4"
+  }
+}

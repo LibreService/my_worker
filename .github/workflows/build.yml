@@ -1,0 +1,34 @@
+name: build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js latest
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+      - name: Install node dependencies
+        run: |
+          npm i -g pnpm
+          pnpm i
+      - name: Run lint
+        run: |
+          pnpm run lint
+      - name: Build
+        run: |
+          pnpm run build
+      - name: Test
+        run: |
+          cd demo
+          pnpm i
+          npx playwright install-deps
+          pnpm run build
+          pnpm run test
