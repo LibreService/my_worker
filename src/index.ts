@@ -1,2 +1,2 @@
 export { LambdaWorker } from './LambdaWorker'
-export { expose } from './LambdaWrapper'
+export { expose, control } from './LambdaWrapper'

@@ -5,7 +5,8 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'standard'
   ],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -17,6 +18,7 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/no-explicit-any': 0,
-    '@typescript-eslint/no-non-null-assertion': 0
+    '@typescript-eslint/no-non-null-assertion': 0,
+    "no-undef": 0,
   }
 }

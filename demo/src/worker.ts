@@ -1,14 +1,19 @@
-import { expose } from '@libreservice/my-worker'
+import { expose, control } from '@libreservice/my-worker'
 
 function basic (x: number) {
   return x + 1
 }
 
+const predictError = control('predictError')
+const predictErrorUnknown = control('predictErrorUnknown')
+
 function chain (x: number) {
   if (x) {
     return true
   }
-  throw new Error("x is falsy")
+  predictError('Something wrong may happen')
+  predictErrorUnknown('This command is mistyped')
+  throw new Error('x is falsy')
 }
 
 function forever () {

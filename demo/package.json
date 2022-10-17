@@ -4,7 +4,8 @@
   "scripts": {
     "worker": "rollup -c rollup.worker-config.mjs",
     "dev": "vite --host",
-    "build": "rm -rf public/*.js.map && NODE_ENV=production pnpm run worker && vite build",
+    "check": "tsc --noEmit",
+    "build": "pnpm run check && rm -rf public/*.js.map && NODE_ENV=production pnpm run worker && vite build",
     "test": "playwright test --browser all",
     "preview": "vite preview --host"
   },

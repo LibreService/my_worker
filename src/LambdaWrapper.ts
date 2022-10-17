@@ -7,14 +7,31 @@ function expose (functions: Functions, readyPromise?: Promise<null>) {
   }>) => {
     await readyPromise
     const { name, args } = msg.data
+    let data: MessageData
     try {
       const result = functions[name](...args)
-      self.postMessage({ ok: true, result })
+      data = { type: 'success', result }
     } catch (error: any) {
       const { message, name } = error
-      self.postMessage({ ok: false, error: { message, name }})
+      data = {
+        type: 'error',
+        error: {
+          message,
+          name
+        }
+      }
     }
+    self.postMessage(data)
   }
 }
 
-export { expose }
+function control (name: string) {
+  return (...args: any[]) => {
+    const data: MessageData = {
+      type: 'control', name, args
+    }
+    self.postMessage(data)
+  }
+}
+
+export { expose, control }

@@ -3,15 +3,23 @@ import { expect, test } from '@playwright/test'
 const expectedLogs = [
   { type: 'log', text: '1' },
   { type: 'log', text: 'true' },
+  { type: 'log', text: 'Something wrong may happen' },
+  { type: 'warning', text: 'Unknown command predictErrorUnknown' },
   { type: 'error', text: 'Error: x is falsy' },
   { type: 'log', text: '1' },
   { type: 'log', text: '1' }
 ]
 
 test('LambdaWorker', async ({ page }) => {
-  let i = 0
-  page.on('console', msg => {
-    expect({ type: msg.type(), text: msg.text()}).toEqual(expectedLogs[i++])
+  const promise = new Promise(resolve => {
+    let i = 0
+    page.on('console', msg => {
+      expect({ type: msg.type(), text: msg.text() }).toEqual(expectedLogs[i++])
+      if (i === expectedLogs.length) {
+        resolve(null)
+      }
+    })
   })
-  await page.goto(`http://localhost:4173`)
+  await page.goto('http://localhost:4173')
+  await promise
 })

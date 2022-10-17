@@ -10,6 +10,7 @@ class LambdaWorker {
   #scriptURL: string
   #queue: Task[] = []
   #running: Task | null = null
+  #commandHandlers: { [key: string]: ((...args: any[]) => void) | undefined } = {}
 
   constructor (scriptURL: string) {
     this.#scriptURL = scriptURL
@@ -18,17 +19,28 @@ class LambdaWorker {
   }
 
   #setUp () {
-    this.worker.onmessage = msg => {
-      const { resolve, reject } = this.#running!
-      this.#running = null
-      this.#next()
-      const { ok, result, error } = msg.data
-      if (ok) {
-        resolve(result)
+    this.worker.onmessage = (msg: MessageEvent<MessageData>) => {
+      const { type } = msg.data
+      if (type === 'control') {
+        const { name, args } = msg.data
+        const handler = this.#commandHandlers[name]
+        if (handler) {
+          handler(...args)
+        } else {
+          console.warn(`Unknown command ${name}`)
+        }
       } else {
-        const e = new Error(error.message)
-        e.name = error.name
-        reject(e)
+        const { resolve, reject } = this.#running!
+        this.#running = null
+        this.#next()
+        if (type === 'success') {
+          resolve(msg.data.result)
+        } else {
+          const { name, message } = msg.data.error
+          const error = new Error(message)
+          error.name = name
+          reject(error)
+        }
       }
     }
   }
@@ -57,7 +69,7 @@ class LambdaWorker {
   register (name: string) {
     return (...args: any[]) =>
       new Promise<any>((resolve, reject) =>
-        this.#schedule({ name, args, resolve, reject}))
+        this.#schedule({ name, args, resolve, reject }))
   }
 
   skip () {
@@ -82,6 +94,10 @@ class LambdaWorker {
     this.worker = new Worker(this.#scriptURL)
     this.#setUp()
     return true
+  }
+
+  control (command: string, callback: (...args: any[]) => void) {
+    this.#commandHandlers[command] = callback
   }
 }
 
