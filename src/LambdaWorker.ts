@@ -5,6 +5,9 @@ type Task = {
   reject: (reason: any) => void
 }
 
+/**
+ * Worker class for pure functions,
+ */
 class LambdaWorker {
   worker: Worker
   #scriptURL: string
@@ -12,6 +15,9 @@ class LambdaWorker {
   #running: Task | null = null
   #commandHandlers: { [key: string]: ((...args: any[]) => void) | undefined } = {}
 
+  /**
+   * @param scriptURL - The URL of the worker script
+   */
   constructor (scriptURL: string) {
     this.#scriptURL = scriptURL
     this.worker = new Worker(scriptURL)
@@ -37,7 +43,7 @@ class LambdaWorker {
           resolve(msg.data.result)
         } else {
           const { name, message } = msg.data.error
-          const error = new Error(message)
+          const error = new Error(message) // reconstruct Error for webkit
           error.name = name
           reject(error)
         }
@@ -66,12 +72,23 @@ class LambdaWorker {
     }
   }
 
+  /**
+   * Registers a worker function in main thread.
+   *
+   * @param name - The function name
+   * @returns A wrapper function for the worker function of the name
+   */
   register (name: string) {
     return (...args: any[]) =>
       new Promise<any>((resolve, reject) =>
         this.#schedule({ name, args, resolve, reject }))
   }
 
+  /**
+   * Skips the current function.
+   *
+   * @returns Whether a running function is skipped
+   */
   skip () {
     if (!this.#running) {
       return false
@@ -84,6 +101,11 @@ class LambdaWorker {
     return true
   }
 
+  /**
+   * Skips all functions.
+   *
+   * @returns Whether any functions are skipped
+   */
   skipAll () {
     if (!this.#running) {
       return false
@@ -96,8 +118,14 @@ class LambdaWorker {
     return true
   }
 
-  control (command: string, callback: (...args: any[]) => void) {
-    this.#commandHandlers[command] = callback
+  /**
+   * Set callback when receiving signal from a control function.
+   *
+   * @param name - The name of the control function
+   * @param callback The callback
+   */
+  control (name: string, callback: (...args: any[]) => void) {
+    this.#commandHandlers[name] = callback
   }
 }
 

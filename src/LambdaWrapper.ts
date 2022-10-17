@@ -1,6 +1,12 @@
 type Functions = { [key: string]: (...args: any[]) => any }
 
-function expose (functions: Functions, readyPromise?: Promise<null>) {
+/**
+ * Exposes worker functions.
+ *
+ * @param functions - Map of name to function
+ * @param readyPromise - A promise that must be resolved before any worker function calls
+ */
+function expose (functions: Functions, readyPromise?: Promise<any>) {
   self.onmessage = async (msg: MessageEvent<{
     name: string
     args: any[]
@@ -25,6 +31,12 @@ function expose (functions: Functions, readyPromise?: Promise<null>) {
   }
 }
 
+/**
+ * Creates a control function to send signal to main thread.
+ *
+ * @param name - The function name
+ * @returns A control function
+ */
 function control (name: string) {
   return (...args: any[]) => {
     const data: MessageData = {
