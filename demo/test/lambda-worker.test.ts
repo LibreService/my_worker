@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 const expectedLogs = [
   { type: 'log', text: '1' },
+  { type: 'log', text: '0' },
   { type: 'log', text: 'true' },
   { type: 'log', text: 'Something wrong may happen' },
   { type: 'warning', text: 'Unknown command predictErrorUnknown' },

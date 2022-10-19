@@ -4,6 +4,10 @@ function basic (x: number) {
   return x + 1
 }
 
+async function asynchronous () {
+  return 0
+}
+
 const predictError = control('predictError')
 const predictErrorUnknown = control('predictErrorUnknown')
 
@@ -24,4 +28,4 @@ function forever () {
   return i
 }
 
-expose({ basic, chain, forever })
+expose({ basic, asynchronous, chain, forever })

@@ -15,7 +15,7 @@ function expose (functions: Functions, readyPromise?: Promise<any>) {
     const { name, args } = msg.data
     let data: MessageData
     try {
-      const result = functions[name](...args)
+      const result = await functions[name](...args)
       data = { type: 'success', result }
     } catch (error: any) {
       const { message, name } = error
