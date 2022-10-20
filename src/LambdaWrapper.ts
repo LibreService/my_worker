@@ -15,6 +15,12 @@ function expose (functions: Functions, readyPromise?: Promise<any>) {
     const { name, args } = msg.data
     let data: MessageData
     try {
+      const workerFunction = functions[name]
+      if (typeof workerFunction !== 'function') {
+        console.error(`${name} is not an exposed worker function`)
+        self.close()
+        return // close doesn't immediately kill the worker
+      }
       const result = await functions[name](...args)
       data = { type: 'success', result }
     } catch (error: any) {

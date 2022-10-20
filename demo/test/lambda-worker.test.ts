@@ -5,7 +5,7 @@ const expectedLogs = [
   { type: 'log', text: '0' },
   { type: 'log', text: 'true' },
   { type: 'log', text: 'Something wrong may happen' },
-  { type: 'warning', text: 'Unknown command predictErrorUnknown' },
+  { type: 'warning', text: 'No handler for command predictErrorUnknown' },
   { type: 'error', text: 'Error: x is falsy' },
   { type: 'log', text: '1' },
   { type: 'log', text: '1' }

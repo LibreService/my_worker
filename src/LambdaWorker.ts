@@ -33,7 +33,7 @@ class LambdaWorker {
         if (handler) {
           handler(...args)
         } else {
-          console.warn(`Unknown command ${name}`)
+          console.warn(`No handler for command ${name}`)
         }
       } else {
         const { resolve, reject } = this.#running!
