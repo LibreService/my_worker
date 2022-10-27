@@ -21,7 +21,7 @@ function expose (functions: Functions, readyPromise?: Promise<any>) {
         self.close()
         return // close doesn't immediately kill the worker
       }
-      const result = await functions[name](...args)
+      const result = await workerFunction(...args)
       data = { type: 'success', result }
     } catch (error: any) {
       const { message, name } = error
