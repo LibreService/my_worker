@@ -10,9 +10,11 @@ function expose (functions: Functions, readyPromise?: Promise<any>) {
   self.onmessage = async (msg: MessageEvent<{
     name: string
     args: any[]
+    transferableIndices: number[]
   }>) => {
     await readyPromise
-    const { name, args } = msg.data
+    const { name, args, transferableIndices } = msg.data
+    const transferables: ArrayBuffer[] = []
     let data: MessageData
     try {
       const workerFunction = functions[name]
@@ -22,7 +24,8 @@ function expose (functions: Functions, readyPromise?: Promise<any>) {
         return // close doesn't immediately kill the worker
       }
       const result = await workerFunction(...args)
-      data = { type: 'success', result }
+      args.forEach((arg, i) => transferableIndices.includes(i) && transferables.push(arg))
+      data = { type: 'success', result, transferables }
     } catch (error: any) {
       const { message, name } = error
       data = {
@@ -33,7 +36,7 @@ function expose (functions: Functions, readyPromise?: Promise<any>) {
         }
       }
     }
-    self.postMessage(data)
+    self.postMessage(data, transferables)
   }
 }
 

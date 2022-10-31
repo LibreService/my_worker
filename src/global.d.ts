@@ -7,6 +7,7 @@ declare global {
   type SuccessMessageData = {
     type: 'success'
     result: any
+    transferables: ArrayBuffer[]
   }
   type ErrorMessageData = {
     type: 'error'

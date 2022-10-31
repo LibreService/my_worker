@@ -8,7 +8,10 @@ const expectedLogs = [
   { type: 'warning', text: 'No handler for command predictErrorUnknown' },
   { type: 'error', text: 'Error: x is falsy' },
   { type: 'log', text: '1' },
-  { type: 'log', text: '1' }
+  { type: 'log', text: '1' },
+  { type: 'log', text: '0' },
+  { type: 'log', text: '4' },
+  { type: 'log', text: '3, 3, 3, 3' }
 ]
 
 test('LambdaWorker', async ({ page }) => {

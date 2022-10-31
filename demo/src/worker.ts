@@ -28,4 +28,11 @@ function forever () {
   return i
 }
 
-expose({ basic, asynchronous, chain, forever })
+function xor (arrayBuffer: ArrayBuffer, n: number) {
+  const u8Array = new Uint8Array(arrayBuffer)
+  for (let i = 0; i < u8Array.length; ++i) {
+    u8Array[i] ^= n
+  }
+}
+
+expose({ basic, asynchronous, chain, forever, xor })

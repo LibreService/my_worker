@@ -1,8 +1,17 @@
 type Task = {
   name: string
   args: any[]
+  transferableIndices: number[]
   resolve: (value: any) => void
   reject: (reason: any) => void
+}
+
+class RentedBuffer {
+  buffer: ArrayBuffer
+
+  constructor (buffer: ArrayBuffer) {
+    this.buffer = buffer
+  }
 }
 
 /**
@@ -36,11 +45,15 @@ class LambdaWorker {
           console.warn(`No handler for command ${name}`)
         }
       } else {
-        const { resolve, reject } = this.#running!
+        const { args, transferableIndices, resolve, reject } = this.#running!
         this.#running = null
         this.#next()
         if (type === 'success') {
-          resolve(msg.data.result)
+          const { result, transferables } = msg.data
+          transferables.forEach((arrayBuffer, i) => {
+            (args[transferableIndices[i]] as RentedBuffer).buffer = arrayBuffer
+          })
+          resolve(result)
         } else {
           const { name, message } = msg.data.error
           const error = new Error(message) // reconstruct Error for webkit
@@ -52,9 +65,18 @@ class LambdaWorker {
   }
 
   #run (task: Task) {
-    const { name, args } = task
+    const { name, args, transferableIndices } = task
+    const transferables: Transferable[] = []
+    const unwrappedArgs = args.map((arg, i) => {
+      if (arg.constructor === RentedBuffer) {
+        transferableIndices.push(i)
+        transferables.push(arg.buffer)
+        return arg.buffer
+      }
+      return arg
+    })
     this.#running = task
-    this.worker.postMessage({ name, args })
+    this.worker.postMessage({ name, args: unwrappedArgs, transferableIndices }, transferables)
   }
 
   #next () {
@@ -81,7 +103,7 @@ class LambdaWorker {
   register (name: string) {
     return (...args: any[]) =>
       new Promise<any>((resolve, reject) =>
-        this.#schedule({ name, args, resolve, reject }))
+        this.#schedule({ name, args, transferableIndices: [], resolve, reject }))
   }
 
   /**
@@ -129,4 +151,4 @@ class LambdaWorker {
   }
 }
 
-export { LambdaWorker }
+export { LambdaWorker, RentedBuffer }
