@@ -1,2 +1,2 @@
-export { LambdaWorker, RentedBuffer } from './LambdaWorker'
-export { expose, control } from './LambdaWrapper'
+export * from './LambdaWorker'
+export * from './LambdaWrapper'

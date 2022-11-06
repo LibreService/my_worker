@@ -1,4 +1,4 @@
-import { RentedBuffer } from '@libreservice/my-worker'
+import { RunningTaskSkippedError, PendingTaskSkippedError, RentedBuffer } from '@libreservice/my-worker'
 import { basic, asynchronous, chain, forever, xor, lambdaWorker } from './workerAPI'
 
 (async () => {
@@ -9,14 +9,16 @@ import { basic, asynchronous, chain, forever, xor, lambdaWorker } from './worker
   await chain(1).then(r => console.log(r)) // true
   await chain(0).catch(e => console.error(`${e.name}: ${e.message}`)) // Error: x is falsy
 
-  forever()
+  let failedPromise = forever().catch(e => console.log(e instanceof RunningTaskSkippedError)) // true
   let promise: Promise<any> = basic(0)
   lambdaWorker.skip() // Without it, the worker will hang
+  await failedPromise
   console.log(await promise) // 1
 
-  forever()
-  forever()
+  forever().catch(e => console.log(e instanceof RunningTaskSkippedError)) // true
+  failedPromise = forever().catch(e => console.log(e instanceof PendingTaskSkippedError)) // true
   lambdaWorker.skipAll() // Skip all scheduled tasks
+  await failedPromise
   console.log(await basic(0)) // 1
 
   const rentedBuffer = new RentedBuffer(new ArrayBuffer(4))

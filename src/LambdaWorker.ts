@@ -6,6 +6,22 @@ type Task = {
   reject: (reason: any) => void
 }
 
+class TaskSkippedError extends Error {}
+
+class RunningTaskSkippedError extends TaskSkippedError {
+  constructor (...params: any[]) {
+    super(...params)
+    this.name = 'RunningTaskSkippedError'
+  }
+}
+
+class PendingTaskSkippedError extends TaskSkippedError {
+  constructor (...params: any[]) {
+    super(...params)
+    this.name = 'PendingTaskSkippedError'
+  }
+}
+
 class RentedBuffer {
   buffer: ArrayBuffer
 
@@ -106,17 +122,26 @@ class LambdaWorker {
         this.#schedule({ name, args, transferableIndices: [], resolve, reject }))
   }
 
+  #killCurrent () {
+    if (!this.#running) {
+      return false
+    }
+    this.worker.terminate()
+    const { reject } = this.#running
+    reject(new RunningTaskSkippedError('Running task skipped.'))
+    this.#running = null
+    return true
+  }
+
   /**
    * Skips the current function.
    *
    * @returns Whether a running function is skipped
    */
   skip () {
-    if (!this.#running) {
+    if (!this.#killCurrent()) {
       return false
     }
-    this.worker.terminate()
-    this.#running = null
     this.worker = new Worker(this.#scriptURL)
     this.#setUp()
     this.#next()
@@ -129,11 +154,12 @@ class LambdaWorker {
    * @returns Whether any functions are skipped
    */
   skipAll () {
-    if (!this.#running) {
+    if (!this.#killCurrent()) {
       return false
     }
-    this.worker.terminate()
-    this.#running = null
+    for (const { reject } of this.#queue) {
+      reject(new PendingTaskSkippedError('Pending task skipped.'))
+    }
     this.#queue = []
     this.worker = new Worker(this.#scriptURL)
     this.#setUp()
@@ -151,4 +177,4 @@ class LambdaWorker {
   }
 }
 
-export { LambdaWorker, RentedBuffer }
+export { LambdaWorker, TaskSkippedError, RunningTaskSkippedError, PendingTaskSkippedError, RentedBuffer }
