@@ -84,7 +84,7 @@ class LambdaWorker {
     const { name, args, transferableIndices } = task
     const transferables: Transferable[] = []
     const unwrappedArgs = args.map((arg, i) => {
-      if (arg.constructor === RentedBuffer) {
+      if (arg && arg.constructor === RentedBuffer) {
         transferableIndices.push(i)
         transferables.push(arg.buffer)
         return arg.buffer

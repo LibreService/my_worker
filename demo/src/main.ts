@@ -4,7 +4,7 @@ import { basic, asynchronous, chain, forever, xor, lambdaWorker } from './worker
 (async () => {
   console.log(await basic(0)) // 1
 
-  console.log(await asynchronous()) // 0
+  console.log(await asynchronous(null, undefined)) // 0
 
   await chain(1).then(r => console.log(r)) // true
   await chain(0).catch(e => console.error(`${e.name}: ${e.message}`)) // Error: x is falsy
