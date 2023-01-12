@@ -1,5 +1,5 @@
 import { RunningTaskSkippedError, PendingTaskSkippedError, RentedBuffer } from '@libreservice/my-worker'
-import { basic, asynchronous, chain, forever, xor, lambdaWorker } from './workerAPI'
+import { basic, asynchronous, chain, forever, xor, lambdaWorker, firstChar } from './workerAPI'
 
 (async () => {
   console.log(await basic(0)) // 1
@@ -27,4 +27,6 @@ import { basic, asynchronous, chain, forever, xor, lambdaWorker } from './worker
   await promise
   console.log(rentedBuffer.buffer.byteLength) // 4
   console.log(new Uint8Array(rentedBuffer.buffer).join(', ')) // 3, 3, 3, 3
+
+  console.log(await firstChar())
 })()

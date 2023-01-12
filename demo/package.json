@@ -2,6 +2,7 @@
   "name": "@libreservice/my-worker-demo",
   "private": true,
   "scripts": {
+    "wasm": "cd test && bash build_wasm.sh",
     "worker": "rollup -c rollup.worker-config.mjs",
     "dev": "vite --host",
     "check": "tsc --noEmit",

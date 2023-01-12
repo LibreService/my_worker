@@ -17,6 +17,13 @@ declare global {
     }
   }
   type MessageData = ControlMessageData | SuccessMessageData | ErrorMessageData
+
+  interface Window {
+    Module: {
+      onRuntimeInitialized: () => void
+      locateFile: (path: string, prefix: string) => string
+    }
+  }
 }
 
 export {}

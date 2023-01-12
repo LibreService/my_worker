@@ -1,4 +1,4 @@
-import { expose, control } from '@libreservice/my-worker'
+import { expose, control, loadWasm } from '@libreservice/my-worker'
 
 function basic (x: number) {
   return x + 1
@@ -35,4 +35,20 @@ function xor (arrayBuffer: ArrayBuffer, n: number) {
   }
 }
 
-expose({ basic, asynchronous, chain, forever, xor })
+const readyPromise = loadWasm('demo.js', {
+  url: 'http://localhost:4173/',
+  init () {
+    Module.ccall('init', 'null', [], [])
+  }
+})
+
+expose({
+  basic,
+  asynchronous,
+  chain,
+  forever,
+  xor,
+  firstChar () {
+    return Module.ccall('first_char', 'string', [], [])
+  }
+}, readyPromise)

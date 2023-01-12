@@ -14,7 +14,8 @@ const expectedLogs = [
   { type: 'log', text: '1' },
   { type: 'log', text: '0' },
   { type: 'log', text: '4' },
-  { type: 'log', text: '3, 3, 3, 3' }
+  { type: 'log', text: '3, 3, 3, 3' },
+  { type: 'log', text: '#' }
 ]
 
 test('LambdaWorker', async ({ page }) => {

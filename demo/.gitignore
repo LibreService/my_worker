@@ -1,2 +1,5 @@
 public/worker.js
+public/demo.data
+public/demo.js
+public/demo.wasm
 *.js.map

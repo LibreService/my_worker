@@ -6,7 +6,8 @@ const asynchronous: (...args: any[]) => Promise<number> = lambdaWorker.register(
 const chain: (x: number) => Promise<boolean> = lambdaWorker.register('chain')
 const forever: () => Promise<any> = lambdaWorker.register('forever')
 const xor: (rBuf: RentedBuffer, n: number) => Promise<void> = lambdaWorker.register('xor')
+const firstChar: () => Promise<string> = lambdaWorker.register('firstChar')
 
 lambdaWorker.control('predictError', (msg: string) => console.log(msg))
 
-export { basic, asynchronous, chain, forever, xor, lambdaWorker }
+export { basic, asynchronous, chain, forever, xor, firstChar, lambdaWorker }

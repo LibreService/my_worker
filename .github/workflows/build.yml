@@ -25,6 +25,16 @@ jobs:
       - name: Build
         run: |
           pnpm run build
+      - name: Install emsdk
+        run: |
+          git clone https://github.com/emscripten-core/emsdk
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+      - name: Build wasm
+        run: |
+          . emsdk/emsdk_env.sh
+          cd demo && pnpm run wasm
       - name: Test
         run: |
           cd demo
