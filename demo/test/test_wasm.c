@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 const char *file_name;
-char buf[1];
+char buf[2];
 
 void init() {
     file_name = "test_wasm.c";

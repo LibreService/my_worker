@@ -14,16 +14,16 @@
   },
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "lint": "eslint --ext .ts src demo",
-    "lint:fix": "eslint --ext .ts --fix src demo",
+    "lint": "eslint --ext .ts,.mjs src demo",
+    "lint:fix": "eslint --ext .ts,.mjs --fix src demo",
     "check": "tsc --noEmit",
     "build": "rm -rf dist && tsc -d"
   },
   "sideEffects": false,
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "eslint": "^8.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "eslint": "^8.36.0",
     "eslint-config-standard": "^17.0.0",
-    "typescript": "^4.8.4"
+    "typescript": "^5.0.2"
   }
 }

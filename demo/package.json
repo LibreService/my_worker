@@ -12,14 +12,15 @@
   },
   "devDependencies": {
     "@libreservice/my-worker": "link:..",
-    "@playwright/test": "^1.27.1",
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-typescript": "^9.0.1",
-    "playwright": "^1.27.1",
-    "rollup": "^3.0.0",
-    "tslib": "^2.4.0",
-    "typescript": "^4.8.4",
-    "vite": "^3.1.7",
-    "vite-plugin-run": "^0.2.0"
+    "@playwright/test": "^1.31.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "esbuild": "^0.17.12",
+    "playwright": "^1.31.2",
+    "rollup": "^3.20.0",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.1",
+    "vite-plugin-run": "^0.4.0"
   }
 }
