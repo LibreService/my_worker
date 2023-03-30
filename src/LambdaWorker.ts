@@ -31,7 +31,7 @@ class RentedBuffer {
 }
 
 /**
- * Worker class for pure functions,
+ * Worker class for pure functions.
  */
 class LambdaWorker {
   worker: Worker

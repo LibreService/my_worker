@@ -34,7 +34,7 @@ jobs:
       - name: Build wasm
         run: |
           . emsdk/emsdk_env.sh
-          cd demo && pnpm run wasm
+          cd demo && npm run wasm
       - name: Test
         run: |
           cd demo
