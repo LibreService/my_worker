@@ -24,6 +24,10 @@ declare global {
       locateFile: (path: string, prefix: string) => string
     }
   }
+
+  const Module: {
+    FS: {[key: string]: (...args: any[]) => any}
+  }
 }
 
 export {}

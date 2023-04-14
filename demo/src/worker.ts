@@ -1,4 +1,4 @@
-import { expose, control, loadWasm } from '@libreservice/my-worker'
+import { expose, control, loadWasm, fsOperate } from '@libreservice/my-worker'
 
 function basic (x: number) {
   return x + 1
@@ -50,5 +50,6 @@ expose({
   xor,
   firstChar () {
     return Module.ccall('first_char', 'string', [], [])
-  }
+  },
+  fsOperate
 }, readyPromise)
