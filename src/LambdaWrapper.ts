@@ -57,7 +57,7 @@ function control (name: string) {
 
 type LoadWasmOption = {
   url?: string
-  init?: () => void
+  init?: () => Promise<void> | void
 }
 
 /**
@@ -72,8 +72,8 @@ function loadWasm (script: string, options?: LoadWasmOption) {
   const { url, init } = options
   return new Promise(resolve => {
     self.Module = {
-      onRuntimeInitialized () {
-        init && init()
+      async onRuntimeInitialized () {
+        init && await init()
         resolve(null)
       },
       locateFile (path: string, prefix: string) {

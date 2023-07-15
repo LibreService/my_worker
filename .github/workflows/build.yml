@@ -39,6 +39,7 @@ jobs:
         run: |
           cd demo
           pnpm i
+          npx playwright install
           npx playwright install-deps
           pnpm run build
           pnpm run test
